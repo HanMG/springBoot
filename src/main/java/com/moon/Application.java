@@ -7,9 +7,12 @@ import org.mybatis.spring.SqlSessionFactoryBean;
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
+
+import com.moon.filter.SampleFilter;
 
 @SpringBootApplication
 @MapperScan(value = {"com.moon.mapper"})
@@ -29,6 +32,17 @@ public class Application {
 		sessionFactory.setMapperLocations(res);
 		
 		return sessionFactory.getObject();
+	}
+	
+	@Bean
+	public FilterRegistrationBean someFilterRegistration() {
+		FilterRegistrationBean registration = new FilterRegistrationBean();
+		SampleFilter sampleFilter = new SampleFilter();
+		registration.setFilter(sampleFilter);
+		registration.addUrlPatterns("/test/*");
+		
+		registration.setName("sampleFilter");
+		return registration;
 	}
 
 }
